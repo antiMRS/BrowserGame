@@ -26,6 +26,7 @@ var EFFECTS = {
 
 var POTIONS = {
     register: ["yellow", "black"],
+    register2: ["yellow", "black"],
     yellow: {
        effect: "hunger",
        used: false

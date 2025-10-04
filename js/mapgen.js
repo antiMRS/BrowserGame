@@ -7,45 +7,31 @@ Dungeon.prototype.generateDungeon = function(param) {
 		  deadEndChance: param.deadEndChance,
 		  maxDeadEndLength: param.maxDeadEndLength
 	})
-	  //console.log("Получаем",this.map[0], "Возможно", this.rooms[0])
-	/**
-	// General base layout.
-	gen.create((function(x, y, wall) {
-		this.setTile(x, y, wall ? TILES.wall : TILES.floor)
-	}).bind(this))
-	let rooms = gen.getRooms()
-	if (rooms.length < 5 || rooms.length > 6)
-		return this.generateDungeon()
-	// Devices
-	this.setTile(rooms[1].getCenter()[0], rooms[1].getCenter()[1], clone(TILES.trapdoor))
-	this.setTile(rooms[0].getCenter()[0], rooms[0].getCenter()[1], clone(TILES.ledder))
-	// Doors
-	this.doors = []
-	for (let i = 0; i < rooms.length; i++) {
-		rooms[i].getDoors((function(x, y) {
-			this.setTile(x, y, TILES.door_closed)
-			this.doors.push({ pos: [x, y], open: false })
-		}).bind(this))
-	}
-	*/
+
 	this.start = [ this.rooms[0].getCenter()[0] -1, this.rooms[0].getCenter()[1]-1 ]
 	  
-	  this.setTile(this.rooms[1].getCenter()[0], this.rooms[1].getCenter()[1], clone(TILES.trapdoor))
-	  if (param.createLedder){
-	  	  this.setTile(this.rooms[0].getCenter()[0], this.rooms[0].getCenter()[1], clone(TILES.ledder))
+	this.setTile(this.rooms[1].getCenter()[0], this.rooms[1].getCenter()[1], clone(TILES.trapdoor))
+	if (param.createLedder){
+	 	  this.setTile(this.rooms[0].getCenter()[0], this.rooms[0].getCenter()[1], clone(TILES.ledder))
+	}
 	  
-	  }
 	  
+	var freeTiles = this.getFreeTiles()
+	shuffle(freeTiles)
 	  
-	  var freeTiles = this.getFreeTiles()
-	  shuffle(freeTiles)
-	  
-	  this.generateItems(randInt(6, 10), [
-	  "bandage",
-	  "bread",
-	  "minibread",
-	  "potion"
-	  ], freeTiles)
+	this.generateItems(randInt(6, 10), [
+	"bandage",
+	"bread",
+	"minibread",
+	"potion"
+	], freeTiles)
+
+	for (let i = 0; i < 4; i++) {
+		let pos = freeTiles.pop()
+		let x = pos[0]
+		let y = pos[1]
+		this.setTile(x, y, ["trap_vline", "trap_2line", "trap_line"].random())
+	}
 
 	// Main music.
 	playBackgroundMusic()

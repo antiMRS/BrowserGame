@@ -176,6 +176,57 @@ var TILES = {
 		transparent: true,
 		desc: "This is trapdoor to next floor"
 	},
+	trap_line: {
+		name: "Floor Trap", ch: "ꔖ", color: "#09ff00ff",
+		shop: false, amount: 0, intake: "distantmemories", device: true,
+		interact: function(who, why) {
+			let x = who.pos[0]
+			let y = who.pos[1]
+
+			who.effects.push(new Effect(who, {effect: TILES.trap_line.effect, level: 1, duration: 10}))
+			world.dungeon.setTile(x , y, "floor")
+
+			ui.msg("You've stepped on a trap.")
+		},
+		walkable: true,
+		transparent: true,
+		desc: "No",
+		effect: false
+	},
+	trap_vline: {
+		name: "Floor Trap", ch: "☰", color: "#09ff00ff",
+		shop: false, amount: 0, intake: "distantmemories", device: true,
+		interact: function(who, why) {
+			let x = who.pos[0]
+			let y = who.pos[1]
+
+			who.effects.push(new Effect(who, {effect: TILES.trap_line.effect, level: 1, duration: 10}))
+			world.dungeon.setTile(x , y, "floor")
+
+			ui.msg("You've stepped on a trap.")
+		},
+		walkable: true,
+		transparent: true,
+		desc: "No",
+		effect: false
+	},
+	trap_2line: {
+		name: "Floor Trap", ch: "☵", color: "#09ff00ff",
+		shop: false, amount: 0, intake: "distantmemories", device: true,
+		interact: function(who, why) {
+			let x = who.pos[0]
+			let y = who.pos[1]
+
+			who.effects.push(new Effect(who, {effect: TILES.trap_line.effect, level: 1, duration: 10}))
+			world.dungeon.setTile(x , y, "floor")
+
+			ui.msg("You've stepped on a trap.")
+		},
+		walkable: true,
+		transparent: true,
+		desc: "No",
+		effect: false
+	},
 	ledder: {
 		name: "Ledder", ch: "⌳", color: "#b4b4b4ff",
 		shop: false, amount: 0, intake: "distantmemories", device: true,

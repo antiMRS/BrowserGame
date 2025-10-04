@@ -5,17 +5,21 @@ function World() {
 	this.camera = { pos: [0, 0], center: [0, 0] }
   
 	this.maps = {
-		[1]: new Dungeon(1, "dungeon"),
-		[2]: new Dungeon(2, "arena", 1, [30, 30], {
-		  radius: 5
-		  }),
+	[1]: new Dungeon(1, "dungeon"),
+	[2]: new Dungeon(2, "dungeon", 1, [15, 15], {
+		roomWidth: 6,
+		roomHeight: 4,
+		biasExponent: 1,
+		deadEndChance: 0.6,
+		maxDeadEndLength: 6,
+		createLedder: true}),
 	[3]: new Dungeon(3, "dungeon", 1, [15, 15], {
-		  roomWidth: 6,
-		  roomHeight: 4,
-		  biasExponent: 1,
-		  deadEndChance: 0.6,
-		  maxDeadEndLength: 6,
-			  createLedder: true}),
+		roomWidth: 6,
+		roomHeight: 4,
+		biasExponent: 1,
+		deadEndChance: 0.6,
+		maxDeadEndLength: 6,
+		createLedder: true}),
 	[4]: new Dungeon(4, "dungeon", 1, [15, 15], {
 		  roomWidth: 6,
 		  roomHeight: 4,
@@ -23,7 +27,7 @@ function World() {
 		  deadEndChance: 0.6,
 		  maxDeadEndLength: 6,
 			  createLedder: true}),
-[5]: new Dungeon(5, "dungeon", 1, [15, 15], {
+	[5]: new Dungeon(5, "dungeon", 1, [15, 15], {
 		  roomWidth: 6,
 		  roomHeight: 4,
 		  biasExponent: 1,
@@ -75,6 +79,16 @@ function World() {
 	this.actor = NaN
 	
 	this.startTime = new Date()
+
+	//traps
+	TILES.trap_line.color = POTIONS.register.random()
+	TILES.trap_line.effect = EFFECTS[TILES.trap_line.color]
+
+	TILES.trap_vline.color = POTIONS.register.random()
+	TILES.trap_vline.effect = EFFECTS[TILES.trap_line.color]
+
+	TILES.trap_2line.color = POTIONS.register.random()
+	TILES.trap_2line.effect = EFFECTS[TILES.trap_line.color]
 
 	if (debugDisplay)
 		for (let j = 0; j < this.dungeon.height; ++j)
