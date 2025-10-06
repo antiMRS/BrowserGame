@@ -21,6 +21,16 @@ var EFFECTS = {
 	        on.health = on.health - 1 * level
 	    },
 	    desc: "Your health slowly falls"
+	},
+    regeneration: {
+	    name: "Regeneration",
+	    ch: "+",
+	    tick: function(on, level) {
+	        if (!on || !level) return
+	        //console.log("tick")
+	        on.health = on.health + 1 * level
+	    },
+	    desc: "-"
 	}
 }
 
@@ -34,7 +44,17 @@ var POTIONS = {
     black: {
         effect: "bleeding",
         used: false
+    },
+    green: {
+        effect: "regeneration",
+        used: false
     }
+}
+
+var TRAP_EFFECTS = {
+    line: "yellow",
+    vline: "green",
+    hline: "black"
 }
 
 /**

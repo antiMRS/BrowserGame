@@ -1,3 +1,29 @@
+TILES.trap = function(x, y, type, discov) {
+	this.pos = [x, y]
+	this.color = colorFromName(TRAP_EFFECTS[type])
+	this.dchar = {
+		"line": ["☰", "═", "𝄙"].random(),
+		"vline": ["ꔖ", "〣", "॥"].random(),
+		"hline": ["X", "╱", "⎽"].random()
+	}[type]
+	this.ch = (discov) ? this.dchar : "."
+	this.type = type
+	this.effect = POTIONS[TRAP_EFFECTS[type]].effect
+	this.discovered = discov
+	this.used = false
+}
+TILES.trap.prototype.StepOn = function(who) {
+	if (who) who.effects.push(new Effect(who, {effect: this.effect, level: 1, duration: 5}))
+	this.diactivate()
+	this.discovered = true
+}
+
+TILES.trap.prototype.diactivate = function() {
+	this.color = "#666"
+	if (!this.discovered) this.ch = this.dchar
+	this.used = true
+}
+
 /**  new Dungeon
  *(
  * id: number | string
@@ -35,6 +61,7 @@ function Dungeon(id, mapType, variant, size, param) {
 	this.actors = []
 	this.doors = new Array()
 	this.rooms = []
+	this.traps = []
 	this.start = [0,0]
 	this.items = []
 	this.passableCache = []
@@ -68,6 +95,16 @@ Dungeon.prototype.setItem = function(how, where) {
 Dungeon.prototype.getTile = function(x, y) {
 	if (x < 0 || y < 0 || x >= this.width || y >= this.height) return TILES.empty
 	return this.map[y][x]
+}
+
+Dungeon.prototype.getTrapOn = function(x, y) {
+	for (i = 0; i < this.traps.length; i++) {
+		if (this.traps[i].pos[0] == x && this.traps[i].pos[1] == y) {
+			
+			return this.traps[i]
+		}
+	}
+	return false
 }
 
 Dungeon.prototype.setTile = function(x, y, tile) {
@@ -202,6 +239,7 @@ Dungeon.prototype.draw = function(camera, display, player) {
 			display.draw(i, j, ch, ROT.Color.toHex(color))
 		}
 	}
+	this.drawCollection(this.traps, camera, display, player, 1)
 	this.drawCollection(this.items, camera, display, player, 1)
 	this.drawCollection(this.actors, camera, display, player, 1)
 }

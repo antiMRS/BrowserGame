@@ -79,17 +79,7 @@ function World() {
 	this.actor = NaN
 	
 	this.startTime = new Date()
-
-	//traps
-	TILES.trap_line.color = POTIONS.register.random()
-	TILES.trap_line.effect = EFFECTS[TILES.trap_line.color]
-
-	TILES.trap_vline.color = POTIONS.register.random()
-	TILES.trap_vline.effect = EFFECTS[TILES.trap_line.color]
-
-	TILES.trap_2line.color = POTIONS.register.random()
-	TILES.trap_2line.effect = EFFECTS[TILES.trap_line.color]
-
+	
 	if (debugDisplay)
 		for (let j = 0; j < this.dungeon.height; ++j)
 			for (let i = 0; i < this.dungeon.width; ++i)

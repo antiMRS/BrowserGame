@@ -179,6 +179,7 @@ Actor.prototype.doPath = function(checkItems, checkWorldChange) {
 	if (this.path.length) {
 		var waypoint = this.path.shift()
 		var thing = world.dungeon.collide(waypoint)
+		var trap = world.dungeon.getTrapOn(waypoint[0], waypoint[1])
 		// Checks enemy.
 		if (thing instanceof Actor) {
 			this.path = []
@@ -203,6 +204,15 @@ Actor.prototype.doPath = function(checkItems, checkWorldChange) {
 			this.path = []
 			return true
 		}
+		// Cheack traps
+		if (trap) if (!trap.used) {
+			console.info("You stepped on a trap")
+			trap.StepOn(this)
+			trap.used = true
+			trap.discovered = true
+			return false
+		}
+
 		// Checks devices.
 		if (checkItems && thing.device) {
 			if (thing.resource) {

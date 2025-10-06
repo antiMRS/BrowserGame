@@ -30,7 +30,7 @@ Dungeon.prototype.generateDungeon = function(param) {
 		let pos = freeTiles.pop()
 		let x = pos[0]
 		let y = pos[1]
-		this.setTile(x, y, ["trap_vline", "trap_2line", "trap_line"].random())
+		this.traps.push(new TILES.trap(x, y, ["line", "hline", "vline"].random(), true))
 	}
 
 	// Main music.
