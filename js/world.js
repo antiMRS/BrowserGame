@@ -6,7 +6,7 @@ function World() {
   
 	this.maps = {
 	[1]: new Dungeon(1, "dungeon"),
-	[2]: new Dungeon(2, "dungeon", 1, [15, 15], {
+	[2]: new Dungeon(2, "cave", 1, [15, 15], {
 		roomWidth: 6,
 		roomHeight: 4,
 		biasExponent: 1,
@@ -76,6 +76,8 @@ function World() {
 	this.roundTimer = 0
 	this.running = true
 	
+	this.plantTick = 0
+	
 	this.actor = NaN
 	
 	this.startTime = new Date()
@@ -88,6 +90,8 @@ function World() {
 }
 
 World.prototype.update = function() {
+	this.plantTick = this.plantTick + 1
+	
 	if (Date.now() < this.roundTimer || !this.running)
 		return
 	while (this.dungeon.actors.length) {

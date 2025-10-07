@@ -120,7 +120,7 @@ Dungeon.prototype.generateOverworld = function() {
 Dungeon.prototype.generateCave = function() {
 	this.GENCAVE(this.width, this.height, {
 		  tiles: {
-		  	  floor: TILES.rockground,
+		  	  floor: TILES.dirt,
 		  	  wall: TILES.rockwall,
 		  	  empty: TILES.empty,
 		  	  decor: []
@@ -129,50 +129,8 @@ Dungeon.prototype.generateCave = function() {
 		  fat: 0.5
 	})
 	  
-	  /**
-	var theme = randInt(0, 2)
-	var groundTile = [TILES.iceground, TILES.rockground, TILES.sand][theme]
-	var wallTile = [TILES.icewall, TILES.rockwall, TILES.rockwall][theme]
-	var items = [[ITEMS.cryosphere], [ITEMS.lithium], [ITEMS.distantmemories]][theme]
-	this.mobProtos = [
-		[ MOBS.remorse, MOBS.remorse, MOBS.remorse, MOBS.ptsd ],
-		[ MOBS.remorse, MOBS.remorse, MOBS.remorse, MOBS.remorse, MOBS.burnout ],
-		[ MOBS.remorse, MOBS.remorse, MOBS.remorse, MOBS.compulsion, MOBS.compulsion ]
-	][theme]
-	var freeTiles = []
-	// Basic borders.
-	var gen0 = new ROT.Map.Arena(this.width, this.height)
-	gen0.create((function(x, y, wall) {
-		if (wall) {
-			this.setTile(x, y, TILES.generateInstance(wallTile))
-		} else if ((x <= 1 || y <= 1 || x >= this.width-2 || y >= this.height-2) && Math.random() < 0.667) {
-			this.setTile(x, y, TILES.generateInstance(wallTile))
-		} else if ((x <= 2 || y <= 2 || x >= this.width-3 || y >= this.height-3) && Math.random() < 0.333) {
-			this.setTile(x, y, TILES.generateInstance(wallTile))
-		} else {
-			this.setTile(x, y, TILES.generateInstance(groundTile))
-		}
-	}).bind(this))
-	// Cellular middle part.
-	var offset = 4
-	var numGen = 1
-	var gen = new ROT.Map.Cellular(this.width - offset*2, this.height - offset*2, { connected: true })
-	gen.randomize(0.5)
-	for (var i = 0; i < numGen; ++i)
-		gen.create(null)
-	gen.create((function(x, y, wall) {
-		x += offset; y += offset
-		if (wall) {
-			this.setTile(x, y, TILES.generateInstance(wallTile))
-		} else {
-			this.setTile(x, y, TILES.generateInstance(groundTile))
-			freeTiles.push([x, y])
-		}
-	}).bind(this))
-	  */
-	  
 	  let freeTiles = this.getFreeTiles()
-	  console.log(freeTiles)
+	  
 	  let st = freeTiles[randInt(0, freeTiles.length)]
 	  let et = freeTiles[randInt(0, freeTiles.length)]
 	this.start = st
@@ -181,6 +139,7 @@ Dungeon.prototype.generateCave = function() {
 	this.setTile(this.start[0]-1, this.start[1]-1, caveExit)
 	  var down = clone(TILES.trapdoor)
 	this.setTile(et[0], et[1], down)
+	  this.generatePlants(10)
 	// Items & mobs.
 	// Artifact.
 	
@@ -214,4 +173,21 @@ Dungeon.prototype.spawnMobs = function(count) {
 			}
 		}
 	}
+}
+
+Dungeon.prototype.generatePlants = function(amount) {
+	  let planttiles = []
+	  
+	  for (let y = 0; y < this.map.length; y ++) for (let x = 0; x < this.map[y].length; x ++) {
+	  	  if (this.map[y][x].fertile && this.map[y][x].walkable) {
+	  	  	  planttiles.push([x, y])
+	  	  }
+	  }
+	  shuffle(planttiles)
+	  for (let i = 0; i < amount; i++) {
+	  	  let p = planttiles.pop()
+	  	  let x = p[0]
+	  	  let y = p[1]
+	  	  this.plants.push(new TILES.plant(x, y))
+	  }
 }

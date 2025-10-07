@@ -62,6 +62,7 @@ function Dungeon(id, mapType, variant, size, param) {
 	this.doors = new Array()
 	this.rooms = []
 	this.traps = []
+	this.plants = []
 	this.start = [0,0]
 	this.items = []
 	this.passableCache = []
@@ -151,53 +152,10 @@ Dungeon.prototype.findPath = function(x, y, actor) {
 }
 
 Dungeon.prototype.update = function() {
-	if (this.biome.weatherEnabled) {
-		if (ui.actor.stats.turns >= this.biome.weatherCounter) {
-			this.biome.weatherCounter = ui.actor.stats.turns + randInt(30, 60)
-			var weathers = [
-				{ i: 0, desc: "clear", vision: 1, suit: 0 },
-				{ i: 1, desc: "dark, vision halved", vision: 0.5, suit: 0 },
-				{ i: 2, desc: "nightmarish; protection damaged", vision: 0.7, suit: 0.5 }
-			]
-			weathers.splice(this.env.weatherIndex, 1)
-			var weather = weathers.random()
-			this.biome.suitCost = weather.suit
-			this.biome.visionMult = weather.vision
-			this.biome.weatherString = weather.desc
-			this.biome.weatherIndex = weather.i
-			ui.msg("Weather changed to " + this.env.weatherString + ".")
-		}
-	}
-	if (this.doors.length) {
-		for (var i = 0, l = this.doors.length; i < l; ++i)
-			this.doors[i].open = false
-		// Player opens doors in proximity.
-		for (var i = 0, l = this.actors.length; i < l; ++i) {
-			var actor = this.actors[i]
-			var x = actor.pos[0]
-			var y = actor.pos[1]
-			for (var i = 0, l = this.doors.length; i < l; ++i) {
-				var door = this.doors[i]
-				var dx = Math.abs(x - door.pos[0])
-				var dy = Math.abs(y - door.pos[1])
-				if (Math.max(dx, dy) <= 1)
-					door.open = true
-			}
-		}
-		for (var i = 0, l = this.doors.length; i < l; ++i) {
-			var pos = this.doors[i].pos
-			var tile = this.doors[i].open ? TILES.door_open : TILES.door_closed
-			this.setTile(pos[0], pos[1], tile)
-		}
-	}
-	if (this == world.maps.base) {
-		var goalItems = 0
-		for (var i = 0; i < this.items.length; ++i) {
-			if (this.items[i].id == ITEMS.goalitem.id)
-				goalItems++
-		}
-		if (!ui.won && goalItems >= 3)
-			ui.win()
+	if (this.plants.length) if (world.plantTick % 10 === 0) {
+		for (i = 0; i < this.plants.length; i++) {
+			this.plants[i].Grow()
+	 }
 	}
 }
 
@@ -240,6 +198,7 @@ Dungeon.prototype.draw = function(camera, display, player) {
 		}
 	}
 	this.drawCollection(this.traps, camera, display, player, 1)
+	this.drawCollection(this.plants, camera, display, player, 1)
 	this.drawCollection(this.items, camera, display, player, 1)
 	this.drawCollection(this.actors, camera, display, player, 1)
 }

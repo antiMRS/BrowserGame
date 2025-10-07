@@ -208,7 +208,7 @@ Actor.prototype.doPath = function(checkItems, checkWorldChange) {
 		if (trap) if (!trap.used) {
 			console.info("You stepped on a trap")
 			trap.StepOn(this)
-			return false
+			return true
 		}
 
 		// Checks devices.

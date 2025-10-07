@@ -11,7 +11,16 @@ var TILES = {
 		color: "#666",
 		walkable: true,
 		transparent: true,
-		desc: "Empty (just like the rest) floor."
+		desc: "Empty floor.",
+		fertile: false
+	},
+	dirt: {
+		ch: "#",
+		color: "#B04900",
+		walkable: true,
+		transparent: true,
+		desc: "Dirt on ground.",
+		fertile: true
 	},
 	wall: {
 		ch: "#", // █
@@ -200,6 +209,34 @@ var TILES = {
 		return tile;
 	}
 };
+
+TILES.plant = function(x, y, age) {
+	this.pos = [x, y]
+	this.ch = "&"
+	this.color = "#090"
+	this.growstates = [
+	"!",
+	"*",
+	"&",
+	"#",
+	"#"
+	]
+	this.growage = (age) ? age : 0
+	this.maxage = 5
+	this.drop = [
+	"bread"
+	]
+}
+TILES.plant.prototype.StepOn = function(who) {
+	world.dungeon.items.push(new Item(ITEMS[this.drop.random()]))
+	removeElem(world.dungeon.plants, this)
+}
+TILES.plant.prototype.Grow = function() {
+	if (this.growage < this.maxage) {
+	this.growage = this.growage + 1
+	this.ch = this.growstates[this.growage - 1]
+	}
+}
 
 var ITEMS = {
 	// Weapons.
