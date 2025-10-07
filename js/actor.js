@@ -208,8 +208,6 @@ Actor.prototype.doPath = function(checkItems, checkWorldChange) {
 		if (trap) if (!trap.used) {
 			console.info("You stepped on a trap")
 			trap.StepOn(this)
-			trap.used = true
-			trap.discovered = true
 			return false
 		}
 
