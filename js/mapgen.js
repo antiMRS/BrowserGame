@@ -43,6 +43,8 @@ console.groupEnd("Generating Terrarian")
 }
 
 Dungeon.prototype.generateArena = function(param) {
+	  console.group("Generationg Terrarian")
+	  console.log({param})
 	  this.GENARENA(this.width, this.height, {
 	  	  radius: (param.radius) ? param.radius : 10,
 	  	  tiles: {
@@ -63,6 +65,8 @@ Dungeon.prototype.generateArena = function(param) {
 	  let et = this.rooms[2].getCenter()
 	  this.setTile(st[0], st[1], TILES.ledder)
 	  this.setTile(et[0], et[1], TILES.trapdoor)
+	  
+	  console.groupEnd()
 }
 
 Dungeon.prototype.generateOverworld = function() {
@@ -122,8 +126,9 @@ Dungeon.prototype.generateOverworld = function() {
 	this.generateMobs(randInt(15,25), this.mobProtos, freeTiles)
 }
 
-Dungeon.prototype.generateCave = function() {
+Dungeon.prototype.generateCave = function(param) {
 	  console.groupCollapsed("Generating Terrarian")
+	  console.log(param)
 	this.GENCAVE(this.width, this.height, {
 		  tiles: {
 		  	  floor: TILES.dirt,

@@ -6,7 +6,9 @@ window.onload = function() {
     function start() {
         try {
             $("#loading-text").innerHTML = "Initializing..."
+            console.groupCollapsed("Generating World")
             world = new World()
+            console.groupEnd()
             var pl = new Actor(world.dungeon.start[0], world.dungeon.start[1], {
                 weapon: ITEMS.bottle,
                 ch: "H"
@@ -31,7 +33,7 @@ window.onload = function() {
             
             $("#debug-hud").style.display = 'none'
             
-            console.log("Starting at", world.startTime)
+            console.info("Starting at", world.startTime)
         } catch(e) {
             $("#loading").style.display = "block"
             $("#loading").innerHTML = "ERROR: " + e.message + "\n" + e.stack
