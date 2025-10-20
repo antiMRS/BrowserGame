@@ -12,14 +12,16 @@ function World() {
 		biasExponent: 1,
 		deadEndChance: 0.6,
 		maxDeadEndLength: 6,
-		createLedder: true}),
+		createLedder: true,
+	icon: "&"}),
 	[3]: new Dungeon(3, "dungeon", 1, [15, 15], {
 		roomWidth: 6,
 		roomHeight: 4,
 		biasExponent: 1,
 		deadEndChance: 0.6,
 		maxDeadEndLength: 6,
-		createLedder: true}),
+		createLedder: true,
+	overgrown: 10}),
 	[4]: new Dungeon(4, "dungeon", 1, [15, 15], {
 		  roomWidth: 6,
 		  roomHeight: 4,

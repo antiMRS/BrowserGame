@@ -29,7 +29,7 @@ window.onload = function() {
             $("#loading").style.display = "none"
             $("#game").style.display = "block"
             
-            //$("#debug-hud").style.display = 'none'
+            $("#debug-hud").style.display = 'none'
             
             console.log("Starting at", world.startTime)
         } catch(e) {

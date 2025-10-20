@@ -181,7 +181,7 @@ var TILES = {
 			})
 			ui.msg("Entering floor", world.dungeon.id + 1)
 		},
-		walkable: true,
+		walkable: false,
 		transparent: true,
 		desc: "This is trapdoor to next floor"
 	},
@@ -196,7 +196,7 @@ var TILES = {
 			})
 			ui.msg("Entering floor", world.dungeon.id - 1)
 		},
-		walkable: true,
+		walkable: false,
 		transparent: true,
 		desc: "This is trapdoor to next floor"
 	},
@@ -228,7 +228,7 @@ TILES.plant = function(x, y, age) {
 	]
 }
 TILES.plant.prototype.StepOn = function(who) {
-	world.dungeon.items.push(new Item(ITEMS[this.drop.random()]))
+	world.dungeon.setItem(this.drop.random(), this.pos)
 	removeElem(world.dungeon.plants, this)
 }
 TILES.plant.prototype.Grow = function() {
@@ -237,6 +237,22 @@ TILES.plant.prototype.Grow = function() {
 	this.ch = this.growstates[this.growage - 1]
 	}
 }
+
+TILES.plants = {}
+TILES.plants.grass = function(x, y, age) {
+		this.pos = [x, y]
+	this.ch = '"'
+	this.color = "#090"
+	this.growage = (age) ? age : 0
+	this.maxage = 1
+}
+TILES.plants.grass.prototype = TILES.plant.prototype
+TILES.plants.grass.prototype.Grow = function(){}
+TILES.plants.grass.prototype.StepOn = function() {
+	removeElem(world.dungeon.plants, this)
+}
+
+TILES.plants.list = []
 
 var ITEMS = {
 	// Weapons.

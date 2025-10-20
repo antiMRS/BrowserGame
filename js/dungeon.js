@@ -45,13 +45,17 @@ TILES.trap.prototype.diactivate = function() {
  *    empty = TILES.empty,
  *  },
  *  icon = string,
- *  radius = number
+ *  radius = number,
+ *  overgrown = 1:10
  * }
  * )
  */
 
 function Dungeon(id, mapType, variant, size, param) {
-	"use strict"
+	console.group("Dungeon " + id)
+	console.log("Type: " + mapType)
+	console.log("Variant: " + variant)
+	console.log("Size: " + size)
 	this.id = id
 	this.width = (size) ? size[0] : randInt(25, 30)
 	this.height = (size) ? size[1] : randInt(25, 30)
@@ -85,6 +89,7 @@ function Dungeon(id, mapType, variant, size, param) {
 		  maxDeadEndLength: 6
 	})
 	this.passableCache.length = this.map.length
+	console.groupEnd("Dungeon " + id)
 }
 
 Dungeon.prototype.setItem = function(how, where) {
@@ -101,8 +106,16 @@ Dungeon.prototype.getTile = function(x, y) {
 Dungeon.prototype.getTrapOn = function(x, y) {
 	for (i = 0; i < this.traps.length; i++) {
 		if (this.traps[i].pos[0] == x && this.traps[i].pos[1] == y) {
-			
 			return this.traps[i]
+		}
+	}
+	return false
+}
+
+Dungeon.prototype.getPlantOn = function(x, y) {
+	for (i = 0; i < this.plants.length; i++) {
+		if (this.plants[i].pos[0] == x && this.plants[i].pos[1] == y) {
+			return this.plants[i]
 		}
 	}
 	return false
@@ -122,11 +135,10 @@ Dungeon.prototype.getTransparent = function(x, y) {
 
 Dungeon.prototype.getFreeTiles = function() {
 	let list = new Array(0)
-	//console.warn(this.id)
 	for (let y = 0; y < this.map.length; y++) {
 		for (let x = 0; x < this.map[y].length; x++){
 			if (this.map[y][x]) {
-			if (this.map[y][x].walkable) list.push([x, y])
+			if (this.map[y][x].walkable && !this.getTrapOn(x, y) && !this.getPlantOn(x, y)) list.push([x, y])
 			}
 		}
 	}

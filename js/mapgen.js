@@ -1,5 +1,6 @@
 Dungeon.prototype.generateDungeon = function(param) {
-	"use strict"
+console.groupCollapsed("Generating Terrarian")
+console.table(param)
 	this.GENDUN(this.width, this.height, {
 		  roomWidth: param.roomWidth,
 		  roomHeight: param.roomHeight,
@@ -7,6 +8,7 @@ Dungeon.prototype.generateDungeon = function(param) {
 		  deadEndChance: param.deadEndChance,
 		  maxDeadEndLength: param.maxDeadEndLength
 	})
+	  param.overgrown = (param.overgrown) ? param.overgrown : 1
 
 	this.start = [ this.rooms[0].getCenter()[0] -1, this.rooms[0].getCenter()[1]-1 ]
 	  
@@ -32,9 +34,12 @@ Dungeon.prototype.generateDungeon = function(param) {
 		let y = pos[1]
 		this.traps.push(new TILES.trap(x, y, ["line", "hline", "vline"].random(), true))
 	}
+	  this.placeFoil(randInt(5,15) * param.overgrown, freeTiles)
+	  this.generatePlants(randInt(1, 8) * param.overgrown)
 
 	// Main music.
 	playBackgroundMusic()
+console.groupEnd("Generating Terrarian")
 }
 
 Dungeon.prototype.generateArena = function(param) {
@@ -118,6 +123,7 @@ Dungeon.prototype.generateOverworld = function() {
 }
 
 Dungeon.prototype.generateCave = function() {
+	  console.groupCollapsed("Generating Terrarian")
 	this.GENCAVE(this.width, this.height, {
 		  tiles: {
 		  	  floor: TILES.dirt,
@@ -142,7 +148,7 @@ Dungeon.prototype.generateCave = function() {
 	  this.generatePlants(10)
 	// Items & mobs.
 	// Artifact.
-	
+	console.groupEnd()
 }
 
 Dungeon.prototype.generateItems = function(amount, choices, freeTiles) {
@@ -175,19 +181,55 @@ Dungeon.prototype.spawnMobs = function(count) {
 	}
 }
 
+Dungeon.prototype.placeFoil = function(amount, freeTiles) {
+	  console.log("Placing "+amount+"/"+freeTiles.length+" foil tiles")
+	  let starters = Math.ceil(amount * (randInt(10, 20) * 0.01))
+	  let foilTiles = []
+	  starters = (starters > 1) ? starters : 1
+	  freeTiles = (freeTiles) ? freeTiles : this.getFreeTiles()
+	  shuffle(freeTiles)
+	  for (let i = 0; i < starters; i ++) {
+	  	  amount --
+	  	  let pos = freeTiles.pop()
+	  	  if (!pos) break
+	  	  let x = pos[0]
+	  	  let y = pos[1]
+	  	  this.setTile(x, y, TILES.dirt)
+	  	  foilTiles.push([x, y])
+	  }
+	  for (i = 0; i < amount; i ++) {
+	  	  let pos = foilTiles.pop()
+	  	  if (!pos) continue
+	  	  for (dy = -1; dy <= 1; dy ++) {
+	  	  	  for (dx = -1; dx <= 1; dx ++) {
+	  	  	  	  if (dx !== dy) if (pos[0] + dx > 0 && pos[0] + dx < this.width && pos[1] + dy > 0 && pos[1] + dy < this.height && Math.abs(dx) !== Math.abs(dy)) {
+	  	  	  	  	  let lpos = [pos[0] + dx, pos[1] + dy]
+	  	  	  	  	  if (this.getPassable(lpos[0], lpos[1])) {
+	  	  	  	  	  	  this.setTile(lpos[0], lpos[1], TILES.dirt)
+	  	  	  	  	  	  foilTiles.push(lpos)
+	  	  	  	  	  	  shuffle(foilTiles)
+	  	  	  	  	  	  break
+	  	  	  	  	  }
+	  	  	  	  }
+	  	  	  }
+	  	  }
+	  }
+}
+
 Dungeon.prototype.generatePlants = function(amount) {
 	  let planttiles = []
-	  
 	  for (let y = 0; y < this.map.length; y ++) for (let x = 0; x < this.map[y].length; x ++) {
 	  	  if (this.map[y][x].fertile && this.map[y][x].walkable) {
 	  	  	  planttiles.push([x, y])
 	  	  }
 	  }
 	  shuffle(planttiles)
+	  console.log("Placing "+amount+"/"+planttiles.length+" plants")
 	  for (let i = 0; i < amount; i++) {
-	  	  let p = planttiles.pop()
-	  	  let x = p[0]
-	  	  let y = p[1]
-	  	  this.plants.push(new TILES.plant(x, y))
+	  	  let pos = planttiles.pop()
+	  	  if (!pos) continue
+	  	  let x = pos[0]
+	  	  let y = pos[1]
+	  	  this.plants.push(new TILES.plants.grass(x, y))
 	  }
 }
