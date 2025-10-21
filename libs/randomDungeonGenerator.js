@@ -34,7 +34,7 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
   if (maxRooms <= 3) N = maxRooms;
   else {
     const maxExtra = maxRooms - 3;
-    const t = Math.random();
+    const t = MYRANDOM.random(0,1);
     const k = Math.floor(Math.pow(t, biasExponent) * (maxExtra + 1)); // k in [0..maxExtra], biased to 0
     N = 3 + k;
   }
@@ -86,8 +86,8 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
   const maxAttempts = Math.max(1000, N * 300); // если не получается — закончим
   while (rooms.length < N && attempts < maxAttempts) {
     attempts++;
-    const rx = 1 + Math.floor(Math.random() * (availW - roomW + 1));
-    const ry = 1 + Math.floor(Math.random() * (availH - roomH + 1));
+    const rx = 1 + Math.floor(MYRANDOM.random() * (availW - roomW + 1));
+    const ry = 1 + Math.floor(MYRANDOM.random() * (availH - roomH + 1));
         const r = { x: rx, y: ry, w: roomW, h: roomH };
     // не пересекаться с существующими (оставляем отступ padding = 1)
     let ok = true;
@@ -175,7 +175,7 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
           candidates.push([room.x, yy]); candidates.push([room.x + room.w - 1, yy]);
         }
       }
-      return candidates[Math.floor(Math.random() * candidates.length)];
+      return candidates[Math.floor(MYRANDOM.random() * candidates.length)];
     }
 
     function carveDoor(room, wallX, wallY) {
@@ -275,8 +275,8 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
           const rangeX = [Math.min(doorA[0], doorB[0]), Math.max(doorA[0], doorB[0])];
           const rangeY = [Math.min(doorA[1], doorB[1]), Math.max(doorA[1], doorB[1])];
           for (let attempt = 0; attempt < 12 && !found; attempt++) {
-            const px = rangeX[0] + Math.floor(Math.random() * (rangeX[1] - rangeX[0] + 1));
-            const py = rangeY[0] + Math.floor(Math.random() * (rangeY[1] - rangeY[0] + 1));
+            const px = rangeX[0] + Math.floor(MYRANDOM.random() * (rangeX[1] - rangeX[0] + 1));
+            const py = rangeY[0] + Math.floor(MYRANDOM.random() * (rangeY[1] - rangeY[0] + 1));
             const p1 = buildLPath(doorA[0], doorA[1], px, py, 0);
             const p2 = buildLPath(px, py, doorB[0], doorB[1], 0);
             const combined = p1.concat(p2);
@@ -298,10 +298,10 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
     // Добавление тупиковых коридоров (ответвления от стен комнат)
     // -----------------------
     for (const room of rooms) {
-      if (Math.random() > deadEndChance) continue;
+      if (MYRANDOM.random() > deadEndChance) continue;
       // выбрать стену и позицию на ней
       const sides = ['left','right','top','bottom'];
-            const side = sides[Math.floor(Math.random() * sides.length)];
+            const side = sides[Math.floor(MYRANDOM.random() * sides.length)];
       let candidates = [];
       if (side === 'left') {
         const x = room.x;
@@ -317,7 +317,7 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
         for (let xx = room.x + 1; xx < room.x + room.w - 1; xx++) candidates.push([xx, y, 0, 1]);
       }
       if (candidates.length === 0) continue;
-      const idx = Math.floor(Math.random() * candidates.length);
+      const idx = Math.floor(MYRANDOM.random() * candidates.length);
       const [wx, wy, dx, dy] = candidates[idx];
       // создать дверь
       if (carveDoor) {
@@ -325,7 +325,7 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
       }
 
       // расширять коридор прямо наружу от стены, длина случайная
-      const length = 1 + Math.floor(Math.random() * maxDeadEndLength);
+      const length = 1 + Math.floor(MYRANDOM.random() * maxDeadEndLength);
       let path = [];
       let cx = wx + dx, cy = wy + dy; // первый клетка за дверью
       let ok = true;
@@ -347,12 +347,12 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
     // Пример: для части corridorCells с небольшой вероятностью сделать боковой тупик.
     const extraBranchProb = 0.08; // вероятность на каждую коридорную клетку
     for (const [cx, cy] of corridorCells) {
-      if (Math.random() > extraBranchProb) continue;
+      if (MYRANDOM.random() > extraBranchProb) continue;
       // выбрать направление, но избежать направления, где уже пол/комната
       const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
       // перемешаем
       for (let i = dirs.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(MYRANDOM.random() * (i + 1));
         [dirs[i], dirs[j]] = [dirs[j], dirs[i]];
       }
       for (const [dx,dy] of dirs) {
@@ -360,7 +360,7 @@ Dungeon.prototype.GENDUN = function(width, height, param) {
         if (!inBounds(nx,ny)) continue;
         if (map[ny][nx] !== TILES.empty) continue; // не начинать там, где что-то уже есть
         // длина тупика маленькая
-        const len = 1 + Math.floor(Math.random() * Math.min(4, maxDeadEndLength));
+        const len = 1 + Math.floor(MYRANDOM.random() * Math.min(4, maxDeadEndLength));
         let path = [];
         let tx = nx, ty = ny;
         let collision = false;
@@ -415,7 +415,7 @@ Dungeon.prototype.generateCave = function(width, height, param = {}) {
     let st = (s >>> 0) || 1;
     return function() { st = (st * 1664525 + 1013904223) >>> 0; return st / 4294967295; };
   }
-  const RNG = seed !== null ? makeSeededRNG(seed) : Math.random;
+  const RNG = seed !== null ? makeSeededRNG(seed) : MYRANDOM.random;
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const inside = (x, y) => x >= 1 && x < width - 1 && y >= 1 && y < height - 1;

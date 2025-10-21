@@ -1,6 +1,6 @@
 Dungeon.prototype.generateDungeon = function(param) {
 console.groupCollapsed("Generating Terrarian")
-console.table(param)
+console.log(param)
 	this.GENDUN(this.width, this.height, {
 		  roomWidth: param.roomWidth,
 		  roomHeight: param.roomHeight,
@@ -19,9 +19,9 @@ console.table(param)
 	  
 	  
 	var freeTiles = this.getFreeTiles()
-	shuffle(freeTiles)
+	MYRANDOM.shuffle(freeTiles)
 	  
-	this.generateItems(randInt(6, 10), [
+	this.generateItems(MYRANDOM.randInt(6, 10), [
 	"bandage",
 	"bread",
 	"minibread",
@@ -32,10 +32,10 @@ console.table(param)
 		let pos = freeTiles.pop()
 		let x = pos[0]
 		let y = pos[1]
-		this.traps.push(new TILES.trap(x, y, ["line", "hline", "vline"].random(), true))
+		this.traps.push(new TILES.trap(x, y, MYRANDOM.choice(["line", "hline", "vline"]), true))
 	}
-	  this.placeFoil(randInt(5,15) * param.overgrown, freeTiles)
-	  this.generatePlants(randInt(1, 8) * param.overgrown)
+	  this.placeFoil(MYRANDOM.randInt(5,15) * param.overgrown, freeTiles)
+	  this.generatePlants(MYRANDOM.randInt(1, 8) * param.overgrown)
 
 	// Main music.
 	playBackgroundMusic()
@@ -43,7 +43,7 @@ console.groupEnd("Generating Terrarian")
 }
 
 Dungeon.prototype.generateArena = function(param) {
-	  console.group("Generationg Terrarian")
+	  console.groupCollapsed("Generationg Terrarian")
 	  console.log({param})
 	  this.GENARENA(this.width, this.height, {
 	  	  radius: (param.radius) ? param.radius : 10,
@@ -69,62 +69,7 @@ Dungeon.prototype.generateArena = function(param) {
 	  console.groupEnd()
 }
 
-Dungeon.prototype.generateOverworld = function() {
-	this.env.oxygenCost = 1
-	this.env.weatherString = "clear"
-	this.env.weatherEnabled = true
-	this.width = randInt(80, 100)
-	this.height = randInt(60, 80)
-	this.map = new Array(this.width * this.height)
 
-	var gen = new ROT.Map.Arena(this.width, this.height)
-	// General layout.
-	var rocks = [ TILES.rock, TILES.rock2, TILES.rock2, TILES.rock3, TILES.rock3, TILES.rock4 ]
-	var noise = new ROT.Noise.Simplex()
-	var freeTiles = []
-	var caveCandidates = []
-	gen.create((function(x, y, wall) {
-		var mountainNoise = noise.get(x/20, y/20)
-		if (wall || mountainNoise > 0.5) {
-			this.setTile(x, y, TILES.generateInstance(TILES.mountain))
-		} else if ((x <= 1 || y <= 1 || x >= this.width-2 || y >= this.height-2) && Math.random() < 0.667) {
-			this.setTile(x, y, TILES.generateInstance(TILES.mountain))
-		} else if ((x <= 2 || y <= 2 || x >= this.width-3 || y >= this.height-3) && Math.random() < 0.333) {
-			this.setTile(x, y, TILES.generateInstance(TILES.mountain))
-		} else if (mountainNoise > 0.3) {
-			this.setTile(x, y, TILES.generateInstance(TILES.hill))
-		} else if (mountainNoise > 0.2) {
-			this.setTile(x, y, TILES.generateInstance(TILES.hill))
-			caveCandidates.push([x, y])
-		} else if (rnd() > 0.95) {
-			this.setTile(x, y, TILES.generateInstance(rocks.random()))
-		} else {
-			this.setTile(x, y, TILES.generateInstance(TILES.sand))
-			freeTiles.push([x, y])
-		}
-	}).bind(this))
-
-	shuffle(caveCandidates)
-	var caveCount = Math.min(randInt(40, 45), caveCandidates.length)
-	for (var i = 0; i < caveCount; ++i) {
-		var cave = TILES.generateInstance(TILES.cave)
-		var id = this.id + "_cave_" + i
-		cave.entrance = { mapId: id, mapType: "cave" }
-		var cavePos = caveCandidates.pop()
-		this.setTile(cavePos[0], cavePos[1], cave)
-	}
-
-	shuffle(freeTiles)
-	this.start = freeTiles.pop()
-	// Air lock.
-	var airlock = clone(TILES.airlock)
-	airlock.entrance = { mapId: "base", mapType: "base" }
-	this.setTile(this.start[0], this.start[1], airlock)
-	// Items & mobs.
-	this.mobProtos = [ MOBS.remorse, MOBS.compulsion, MOBS.withdrawal ]
-	this.generateItems(randInt(10,15), [ ITEMS.distantmemories ], freeTiles)
-	this.generateMobs(randInt(15,25), this.mobProtos, freeTiles)
-}
 
 Dungeon.prototype.generateCave = function(param) {
 	  console.groupCollapsed("Generating Terrarian")
@@ -142,8 +87,8 @@ Dungeon.prototype.generateCave = function(param) {
 	  
 	  let freeTiles = this.getFreeTiles()
 	  
-	  let st = freeTiles[randInt(0, freeTiles.length)]
-	  let et = freeTiles[randInt(0, freeTiles.length)]
+	  let st = freeTiles[MYRANDOM.randInt(0, freeTiles.length)]
+	  let et = freeTiles[MYRANDOM.randInt(0, freeTiles.length)]
 	this.start = st
 	// Exit.
 	var caveExit = clone(TILES.ledder)
@@ -158,7 +103,7 @@ Dungeon.prototype.generateCave = function(param) {
 
 Dungeon.prototype.generateItems = function(amount, choices, freeTiles) {
 	  for (var i = 0; i < amount; ++i) {
-	  	  var item = choices.random()
+	  	  var item = MYRANDOM.choice(choices)
 	  	  var pos = freeTiles.pop()
 	  	  if (item) this.setItem(item, pos)
 	  }
@@ -167,7 +112,7 @@ Dungeon.prototype.generateItems = function(amount, choices, freeTiles) {
 Dungeon.prototype.generateMobs = function(amount, choices, freeTiles) {
 	for (var i = 0; i < amount; ++i) {
 		var pos = freeTiles.pop()
-		var mob = new Actor(pos[0], pos[1], choices.random())
+		var mob = new Actor(pos[0], pos[1], MYRANDOM.choice(choices))
 		this.actors.push(mob)
 	}
 }
@@ -175,10 +120,10 @@ Dungeon.prototype.generateMobs = function(amount, choices, freeTiles) {
 Dungeon.prototype.spawnMobs = function(count) {
 	for (var m = 0; m < count; ++m) {
 		for (var i = 0; i < this.map.length; ++i) {
-			var x = randInt(3, this.width-3)
-			var y = randInt(3, this.height-3)
+			var x = MYRANDOM.randInt(3, this.width-3)
+			var y = MYRANDOM.randInt(3, this.height-3)
 			if (this.getTile(x, y).walkable) {
-				var mob = new Actor(x, y, this.mobProtos.random())
+				var mob = new Actor(x, y, MYRANDOM.choice(this.mobProtos))
 				this.actors.push(mob)
 				break
 			}
@@ -188,11 +133,11 @@ Dungeon.prototype.spawnMobs = function(count) {
 
 Dungeon.prototype.placeFoil = function(amount, freeTiles) {
 	  console.log("Placing "+amount+"/"+freeTiles.length+" foil tiles")
-	  let starters = Math.ceil(amount * (randInt(10, 20) * 0.01))
+	  let starters = Math.ceil(amount * (MYRANDOM.randInt(10, 20) * 0.01))
 	  let foilTiles = []
 	  starters = (starters > 1) ? starters : 1
 	  freeTiles = (freeTiles) ? freeTiles : this.getFreeTiles()
-	  shuffle(freeTiles)
+	  MYRANDOM.shuffle(freeTiles)
 	  for (let i = 0; i < starters; i ++) {
 	  	  amount --
 	  	  let pos = freeTiles.pop()
@@ -212,7 +157,7 @@ Dungeon.prototype.placeFoil = function(amount, freeTiles) {
 	  	  	  	  	  if (this.getPassable(lpos[0], lpos[1])) {
 	  	  	  	  	  	  this.setTile(lpos[0], lpos[1], TILES.dirt)
 	  	  	  	  	  	  foilTiles.push(lpos)
-	  	  	  	  	  	  shuffle(foilTiles)
+	  	  	  	  	  	  MYRANDOM.shuffle(foilTiles)
 	  	  	  	  	  	  break
 	  	  	  	  	  }
 	  	  	  	  }
@@ -228,7 +173,7 @@ Dungeon.prototype.generatePlants = function(amount) {
 	  	  	  planttiles.push([x, y])
 	  	  }
 	  }
-	  shuffle(planttiles)
+	  MYRANDOM.shuffle(planttiles)
 	  console.log("Placing "+amount+"/"+planttiles.length+" plants")
 	  for (let i = 0; i < amount; i++) {
 	  	  let pos = planttiles.pop()

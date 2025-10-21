@@ -1,6 +1,4 @@
-var world, ui, DATE
-
-DATE = new Date()
+var world, ui
 
 window.onload = function() {
     function start() {
@@ -31,7 +29,7 @@ window.onload = function() {
             $("#loading").style.display = "none"
             $("#game").style.display = "block"
             
-            $("#debug-hud").style.display = 'none'
+            //$("#debug-hud").style.display = 'none'
             
             console.info("Starting at", world.startTime)
         } catch(e) {

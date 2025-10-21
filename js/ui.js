@@ -313,6 +313,8 @@ UI.prototype.update = function() {
 	this.actor.pos[0],
 	this.actor.pos[1]
 	).ch
+		$("#debug-hud-seed").innerHTML = MYRANDOM.seed
+		$("#debug-hud-genseed").innerHTML = MYRANDOM.generation_seed
 	$("#stats-effects").innerHTML = ""
 	for (e = 0; e < this.actor.effects.length; e++) {
 		$("#stats-effects").innerHTML = $("#stats-effects").innerHTML + this.actor.effects[e].effect.ch + " " + this.actor.effects[e].effect.name + ": " + this.actor.effects[e].duration

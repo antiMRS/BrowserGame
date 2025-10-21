@@ -2,9 +2,9 @@ TILES.trap = function(x, y, type, discov) {
 	this.pos = [x, y]
 	this.color = colorFromName(TRAP_EFFECTS[type])
 	this.dchar = {
-		"line": ["☰", "═", "𝄙"].random(),
-		"vline": ["ꔖ", "〣", "॥"].random(),
-		"hline": ["X", "╱", "⎽"].random()
+		"line": MYRANDOM.choice(["☰", "═", "𝄙"]),
+		"vline": MYRANDOM.choice(["ꔖ", "〣", "॥"]),
+		"hline": MYRANDOM.choice(["X", "╱", "⎽"])
 	}[type]
 	this.ch = (discov) ? this.dchar : "."
 	this.type = type
@@ -57,8 +57,8 @@ function Dungeon(id, mapType, variant, size, param) {
 	console.log("Variant: " + variant)
 	console.log("Size: " + size)
 	this.id = id
-	this.width = (size) ? size[0] : randInt(25, 30)
-	this.height = (size) ? size[1] : randInt(25, 30)
+	this.width = (size) ? size[0] : MYRANDOM.randInt(25, 30)
+	this.height = (size) ? size[1] : MYRANDOM.randInt(25, 30)
 	this.variant = (variant) ? variant : 1
 	this.icon = (param) ? (param.icon) ? param.icon : "☍" : "☍"
 	this.map = []
@@ -76,7 +76,6 @@ function Dungeon(id, mapType, variant, size, param) {
 		visionMult: 1,
 	}
 	var dispensators = {
-		overworld: this.generateOverworld.bind(this),
 		cave: this.generateCave.bind(this),
 		dungeon: this.generateDungeon.bind(this),
 		arena: this.generateArena.bind(this)
