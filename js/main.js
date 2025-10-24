@@ -1,4 +1,4 @@
-var world, ui
+var world, ui, browserData
 
 window.onload = function() {
     function start() {
