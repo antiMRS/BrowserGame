@@ -214,10 +214,10 @@ function UI(actor) {
 		window.open("LICENSE.md", "_blank")
 	}, true)
 	$("#mainmenu-code").addEventListener("click", function() {
-		window.open("https://github.com/JuditKaramazov/TCA-rogueMazov", "_blank")
+		window.open("https://github.com/antiMRS/BrowserGame", "_blank")
 	}, true)
 	$("#mainmenu-bugs").addEventListener("click", function() {
-		window.open("https://github.com/JuditKaramazov/TCA-rogueMazov/issues", "_blank")
+		window.open("https://github.com/antiMRS/BrowserGame/issues", "_blank")
 	}, true)
 	$("#mainmenu-restart").addEventListener("click", function() {
 		window.location.reload()
