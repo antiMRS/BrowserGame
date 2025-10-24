@@ -53,6 +53,7 @@ TILES.trap.prototype.diactivate = function() {
 
 function Dungeon(id, mapType, variant, size, param) {
 	console.group("Dungeon " + id)
+	console.time("Generation in")
 	console.log("Type: " + mapType)
 	console.log("Variant: " + variant)
 	console.log("Size: " + size)
@@ -88,6 +89,7 @@ function Dungeon(id, mapType, variant, size, param) {
 		  maxDeadEndLength: 6
 	})
 	this.passableCache.length = this.map.length
+	console.timeEnd("Generation in")
 	console.groupEnd("Dungeon " + id)
 }
 

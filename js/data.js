@@ -73,7 +73,7 @@ var TILES = {
 	},
 	rockground: {
 		ch: [":",";"],
-		color: "#c1c1c1",
+		color: "#7E7E7E",
 		walkable: true,
 		transparent: true,
 		desc: "Rock ground."

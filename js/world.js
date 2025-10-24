@@ -13,7 +13,8 @@ function World() {
 		deadEndChance: 0.6,
 		maxDeadEndLength: 6,
 		createLedder: true,
-	icon: "&"}),
+		icon: "&",
+		overgrown: 1}),
 	[3]: new Dungeon(3, "dungeon", 1, [15, 15], {
 		roomWidth: 6,
 		roomHeight: 4,
@@ -64,7 +65,7 @@ function World() {
 		  deadEndChance: 0.6,
 		  maxDeadEndLength: 6,
 			  createLedder: true}),
-	[10]: new Dungeon(10, "arena", 1, [15, 15], {
+	[10]: new Dungeon(10, "arena", 1, [30, 30], {
 		  roomWidth: 6,
 		  roomHeight: 4,
 		  biasExponent: 1,

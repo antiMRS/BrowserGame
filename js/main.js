@@ -5,7 +5,9 @@ window.onload = function() {
         try {
             $("#loading-text").innerHTML = "Initializing..."
             console.groupCollapsed("Generating World")
+            console.time("World Gemeration time")
             world = new World()
+            console.timeEnd("World Gemeration time")
             console.groupEnd()
             var pl = new Actor(world.dungeon.start[0], world.dungeon.start[1], {
                 weapon: ITEMS.bottle,

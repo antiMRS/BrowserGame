@@ -76,7 +76,7 @@ Dungeon.prototype.generateCave = function(param) {
 	  console.log(param)
 	this.GENCAVE(this.width, this.height, {
 		  tiles: {
-		  	  floor: TILES.dirt,
+		  	  floor: TILES.rockground,
 		  	  wall: TILES.rockwall,
 		  	  empty: TILES.empty,
 		  	  decor: []
@@ -95,7 +95,8 @@ Dungeon.prototype.generateCave = function(param) {
 	this.setTile(this.start[0]-1, this.start[1]-1, caveExit)
 	  var down = clone(TILES.trapdoor)
 	this.setTile(et[0], et[1], down)
-	  this.generatePlants(10)
+	  this.placeFoil(5 * param.overgrown + 5, freeTiles)
+	  this.generatePlants(4 * param.overgrown + 5)
 	// Items & mobs.
 	// Artifact.
 	console.groupEnd()
