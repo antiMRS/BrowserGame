@@ -47,6 +47,7 @@ MYRANDOM.base64ToDecimal = function(base64Str) {
 }
 
 // Инициализация seed (может быть перезаписана случайным сидом)
+MYRANDOM.generation_seed = MYRANDOM.generateRandomSeed()
 MYRANDOM.seed = MYRANDOM.base64ToDecimal(MYRANDOM.generation_seed);
 
 // Функция для генерации псевдослучайного числа
